@@ -1,0 +1,39 @@
+User Authentication (Session-Based)
+
+Register  Login  Logout
+
+Password hashing (Laravel bcrypt)
+
+Session management (database driver)
+
+Single-device login old sessions automatically deleted
+
+Middleware for protected routes (auth)
+
+Subscription Management
+
+Plans Basic  Pro  Premium
+
+Stripe integration
+
+One-time subscription payment
+
+Recurring subscription
+
+Webhook to update subscription status
+
+Expiry check
+
+Feature Access
+
+Plan-based feature control
+
+Optional Usage limits (e.g., message count)
+
+Admin (Optional)
+
+CRUD for plans
+
+View users & subscriptions
+
+Manually upgradedowngrade user subscriptions
