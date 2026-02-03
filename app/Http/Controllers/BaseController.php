@@ -25,4 +25,7 @@ class BaseController extends Controller
             'data' => $data,
         ], $code);
     }
+    public function NotAuthorized(){
+        return $this->Response(false, null, 'Not authorized', 401);
+    }
 }

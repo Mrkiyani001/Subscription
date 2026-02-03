@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group([
+    'middleware' => ['api', 'auth:api', 'check.device']], function () {
+    Route::get('/logout', [AuthController::class, 'logout']);
+    Route::post('/refresh', [AuthController::class, 'refreshtoken']);
+    Route::get('/users', [AuthController::class, 'getusers']);
 });

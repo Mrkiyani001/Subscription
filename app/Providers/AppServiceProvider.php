@@ -19,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Configure Passport token expiration
+        \Laravel\Passport\Passport::tokensExpireIn(now()->addMinutes(60));
+        \Laravel\Passport\Passport::refreshTokensExpireIn(now()->addDays(7));
     }
 }
