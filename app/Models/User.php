@@ -46,4 +46,35 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    
+    // Subscription Relationships
+    public function subscriptions()
+    {
+        return $this->hasMany(SubUser::class, 'user_id');
+    }
+    
+    public function sessions()
+    {
+        return $this->hasMany(SubSession::class, 'user_id');
+    }
+    
+    // Helper Methods
+    public function activeSubscription()
+    {
+        return $this->subscriptions()
+                    ->where('status', 'active')
+                    ->where('expiry_date', '>=', now()->toDateString())
+                    ->first();
+    }
+    
+    public function hasActiveSubscription()
+    {
+        return $this->activeSubscription() !== null;
+    }
+    
+    public function canUseSession()
+    {
+        $subscription = $this->activeSubscription();
+        return $subscription && $subscription->canUseSession();
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\CheckDevice;
+use App\Http\Middleware\CheckSubscription;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -23,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Register custom middleware aliases
         $middleware->alias([
             'check.device' => CheckDevice::class,
+            'check.subscription' => CheckSubscription::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -125,4 +125,5 @@ class AuthController extends BaseController
             return $this->Response(false, null, $e->getMessage(), 500);
         }
     }
+    
 }
