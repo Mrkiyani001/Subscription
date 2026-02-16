@@ -22,5 +22,10 @@ class AppServiceProvider extends ServiceProvider
         // Configure Passport token expiration
         \Laravel\Passport\Passport::tokensExpireIn(now()->addMinutes(60));
         \Laravel\Passport\Passport::refreshTokensExpireIn(now()->addDays(7));
+
+        \Illuminate\Support\Facades\Event::listen(
+            \Laravel\Cashier\Events\WebhookReceived::class,
+            [\App\Listeners\StripeEventListener::class, 'handle']
+        );
     }
 }

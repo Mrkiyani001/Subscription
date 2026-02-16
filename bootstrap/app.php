@@ -20,6 +20,12 @@ return Application::configure(basePath: dirname(__DIR__))
             // For API requests, don't redirect - let AuthenticationException be thrown
             return null;
         });
+
+        // Exclude Stripe Webhook from CSRF protection
+        $middleware->validateCsrfTokens(except: [
+            'stripe/*',
+            'api/stripe/*' // Just in case user listens to this
+        ]);
         
         // Register custom middleware aliases
         $middleware->alias([

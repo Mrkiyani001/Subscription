@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Cashier\Billable;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens, Billable;
 
     /**
      * The attributes that are mass assignable.
@@ -46,32 +47,32 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    
+
     // Subscription Relationships
-    public function subscriptions()
+    public function sessionSubscriptions()
     {
         return $this->hasMany(SubUser::class, 'user_id');
     }
-    
+
     public function sessions()
     {
         return $this->hasMany(SubSession::class, 'user_id');
     }
-    
+
     // Helper Methods
     public function activeSubscription()
     {
-        return $this->subscriptions()
-                    ->where('status', 'active')
-                    ->where('expiry_date', '>=', now()->toDateString())
-                    ->first();
+        return $this->sessionSubscriptions()
+            ->where('status', 'active')
+            ->where('expiry_date', '>=', now()->toDateString())
+            ->first();
     }
-    
+
     public function hasActiveSubscription()
     {
         return $this->activeSubscription() !== null;
     }
-    
+
     public function canUseSession()
     {
         $subscription = $this->activeSubscription();

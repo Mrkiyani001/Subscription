@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\StripeSubscriptionController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SubscriptionPlanController;
 use Illuminate\Http\Request;
@@ -25,6 +26,10 @@ Route::group(['middleware' => ['api', 'auth:api', 'check.device']], function () 
     // Subscribe route (user can subscribe without having subscription)
     Route::post('/subscribe', [SubscriptionController::class, 'subscribe']);
     Route::get('/current/subscription', [SubscriptionController::class, 'currentSubscription']);
+
+    // Separate Stripe Integration Routes
+    Route::post('/stripe/checkout', [StripeSubscriptionController::class, 'checkout']);
+    Route::get('/stripe/portal', [StripeSubscriptionController::class, 'billingPortal']);
 });
 
 // Routes that need BOTH auth AND active subscription

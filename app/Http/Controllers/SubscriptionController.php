@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\DB;
 
 class SubscriptionController extends BaseController
 {
-    public function subscribe(Request $request){
+    // This method is commented out to enforce payment via Stripe.
+    // Use /api/stripe/checkout instead.
+    public function subscribe(Request $request){        // for FREE Subscription
         $this->ValidateRequest($request, [
             'plan_id' => 'required|integer',
         ]);
@@ -122,16 +124,22 @@ class SubscriptionController extends BaseController
             return $this->Response(false, null, 'No active subscription found', 404);
         }
         DB::beginTransaction();
+        
+        // Handle Stripe Subscription Cancellation
+        if ($user->subscription('default')) {
+            $user->subscription('default')->cancel(); // Stops auto-renewal at period end
+        }
+
         $subscription->update([
             'status' => 'inactive',
             'updated_by' => $user->id,
         ]);
         DB::commit();
-        return $this->Response(true, $subscription, 'Subscription cancelled successfully', 200);
+        return $this->Response(true, $subscription, 'Subscription canceled. Access remains until end of period.', 200);
     }catch(Exception $e){
-    DB::rollBack();
-    return $this->Response(false, null, 'Subscription cancellation failed', 500);
-}
+        DB::rollBack();
+        return $this->Response(false, null, 'Subscription cancellation failed: ' . $e->getMessage(), 500);
+    }
 }
 public function extendSubscription(Request $request){
     try{
